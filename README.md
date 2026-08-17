@@ -4,14 +4,16 @@ Repositorio de prácticas de la materia **Programación de Aplicaciones Móviles
 
 ## Contenido
 
-El repositorio contiene dos proyectos Android independientes:
+El repositorio contiene cuatro proyectos Android independientes:
 
 | Proyecto | Descripción |
 | --- | --- |
 | [`PracticaHolaMundo`](./PracticaHolaMundo) | Aplicación introductoria con Jetpack Compose, un mensaje de bienvenida y un botón que muestra un `Toast`. |
 | [`PracticaFormLogin`](./PracticaFormLogin) | Formulario de usuario y contraseña con validación local de las credenciales `admin` / `admin`. |
+| [`PracticaIntents`](./PracticaIntents) | Demostración de navegación entre actividades mediante un `Intent` explícito: desde la actividad principal se accede a una segunda actividad. |
+| [`PracticaNavegacion`](./PracticaNavegacion) | Demostración de navegación entre pantallas dentro de Compose mediante Navigation Compose, con rutas para una pantalla inicial y una segunda pantalla. |
 
-Cada práctica debe abrirse como un proyecto separado en Android Studio. No existe un proyecto Gradle raíz que agrupe ambas aplicaciones.
+Cada práctica debe abrirse como un proyecto separado en Android Studio. No existe un proyecto Gradle raíz que agrupe estas aplicaciones.
 
 ## Tecnologías
 
@@ -33,7 +35,7 @@ Cada práctica debe abrirse como un proyecto separado en Android Studio. No exis
 ## Ejecutar desde Android Studio
 
 1. Cloná el repositorio.
-2. Abrí `PracticaHolaMundo` o `PracticaFormLogin` como proyecto independiente.
+2. Abrí `PracticaHolaMundo`, `PracticaFormLogin`, `PracticaIntents` o `PracticaNavegacion` como proyecto independiente.
 3. Esperá a que Android Studio complete la sincronización de Gradle.
 4. Seleccioná un emulador o conectá un dispositivo Android con API 33 o superior.
 5. Elegí la configuración `app` en la barra de ejecución.

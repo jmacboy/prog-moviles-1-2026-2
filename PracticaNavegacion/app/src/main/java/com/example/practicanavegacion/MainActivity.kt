@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.practicanavegacion.ui.screens.HomeScreen
 import com.example.practicanavegacion.ui.screens.SecondScreen
+import com.example.practicanavegacion.ui.screens.ThirdScreen
 import com.example.practicanavegacion.ui.theme.PracticaNavegacionTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +35,10 @@ private fun NavigationApp(navController: NavHostController = rememberNavControll
             HomeScreen(navController)
         }
         composable("second") {
-            SecondScreen()
+            SecondScreen(navController)
+        }
+        composable("third") {
+            ThirdScreen()
         }
     }
 }

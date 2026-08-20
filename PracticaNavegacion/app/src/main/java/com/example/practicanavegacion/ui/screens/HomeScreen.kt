@@ -16,7 +16,10 @@ import com.example.practicanavegacion.ui.theme.PracticaNavegacionTheme
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        HomeScreenContent(Modifier.padding(innerPadding), navController)
+        HomeScreenContent(
+            Modifier.padding(innerPadding),
+            navController
+        )
     }
 }
 

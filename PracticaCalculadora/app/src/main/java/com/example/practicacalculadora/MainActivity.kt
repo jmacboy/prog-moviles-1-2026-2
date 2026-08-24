@@ -1,7 +1,6 @@
 package com.example.practicacalculadora
 
 import android.os.Bundle
-import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -45,39 +44,57 @@ fun Calculadora(modifier: Modifier = Modifier) {
             .padding(16.dp)
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        Text("0", textAlign = TextAlign.End,
+        Text(
+            "0", textAlign = TextAlign.End,
             fontSize = 48.sp,
-            modifier = Modifier.fillMaxWidth())
-        Row {
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("1") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("2") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("3") }
-        }
-        Row {
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("4") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("5") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("6") }
-        }
-        Row {
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("7") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("8") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("9") }
-        }
-        Button(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text("0") }
-        Row {
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("+") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("-") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("x") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("/") }
-        }
-        Button(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text("=") }
-        Row {
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("CE") }
-            Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("C") }
-        }
+            modifier = Modifier.fillMaxWidth()
+        )
+        NumberPanel()
+        OperationsPanel()
+        CleanupPanel()
         Spacer(modifier = Modifier.weight(1f))
 
     }
+}
+
+@Composable
+fun CleanupPanel() {
+    Row {
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("CE") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("C") }
+    }
+}
+
+@Composable
+fun OperationsPanel() {
+    Row {
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("+") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("-") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("x") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("/") }
+    }
+    Button(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text("=") }
+
+}
+
+@Composable
+fun NumberPanel() {
+    Row {
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("1") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("2") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("3") }
+    }
+    Row {
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("4") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("5") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("6") }
+    }
+    Row {
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("7") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("8") }
+        Button(onClick = {}, modifier = Modifier.weight(1f)) { Text("9") }
+    }
+    Button(onClick = {}, modifier = Modifier.fillMaxWidth()) { Text("0") }
 }
 
 @Preview(showBackground = true)

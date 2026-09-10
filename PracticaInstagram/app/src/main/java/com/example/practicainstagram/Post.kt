@@ -6,5 +6,6 @@ class Post(
     val imageUrl: String, //url de la imagen
     val reactionName: String,
     val date: String,
-    val description: String
+    val description: String,
+    var isLiked: Boolean = false
 )

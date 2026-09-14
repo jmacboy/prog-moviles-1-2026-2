@@ -1,11 +1,15 @@
 package com.example.practicainstagram
 
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.ACTION_SEND
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,9 +31,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.example.practicainstagram.ui.theme.PracticaInstagramTheme
@@ -60,6 +68,17 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+fun shareText(context: Context, text: String) {
+    val sendIntent: Intent = Intent().apply {
+        action = ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, text)
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
 }
 
 @Composable
@@ -125,7 +144,7 @@ fun Footer() {
 
 @Composable
 fun ColumnScope.PostList() {
-    val posts = remember {
+    val posts = rememberSaveable {
         mutableStateListOf(
             Post(
                 R.drawable.profile,
@@ -133,7 +152,10 @@ fun ColumnScope.PostList() {
                 "https://cdn.pixabay.com/photo/2018/08/18/18/50/sunset-3615276_1280.jpg",
                 "user3",
                 "1 de enero",
-                "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                comments = arrayListOf(
+                    Comment("user1", "Me gusta tu publicación")
+                ),
             ),
             Post(
                 R.drawable.profile,
@@ -149,7 +171,11 @@ fun ColumnScope.PostList() {
                 "https://cdn.pixabay.com/photo/2018/08/18/18/50/sunset-3615276_1280.jpg",
                 "user3",
                 "1 de enero",
-                "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                comments = arrayListOf(
+                    Comment("user1", "Cualquier cosa"),
+                    Comment("user2", "Ya mejor que le corten el internet")
+                ),
             ),
             Post(
                 R.drawable.profile,
@@ -182,30 +208,155 @@ fun ColumnScope.PostList() {
         modifier = Modifier.weight(1f)
     ) {
         items(posts) { post ->
-            PostItem(post, onLikeClick = {
-                val index = posts.indexOf(post)
-                val updatedPost = post.copy(isLiked = !post.isLiked)
-                
-                if (updatedPost.isLiked) {
-                    Toast.makeText(context, "Post likeado", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Post deslikeado", Toast.LENGTH_SHORT).show()
+            PostItem(
+                post, onLikeClick = {
+                    val index = posts.indexOf(post)
+                    val updatedPost = post.copy(isLiked = !post.isLiked)
+
+                    if (updatedPost.isLiked) {
+                        Toast.makeText(context, "Post likeado", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Post deslikeado", Toast.LENGTH_SHORT).show()
+                    }
+                    posts[index] = updatedPost
+                }, onShareClick = {
+                    val textToShare = "Mira esta publicación de ${post.userName}: ${post.imageUrl}"
+                    shareText(context, textToShare)
+                }, onCommentClick = {
+                    val index = posts.indexOf(post)
+                    val updatedPost = post.copy(showComment = !post.showComment)
+                    posts[index] = updatedPost
+                },
+                onSubmitComment = { text ->
+                    val index = posts.indexOf(post)
+                    val comments = post.comments.toMutableList() as ArrayList<Comment>
+                    comments.add(Comment("user1", text))
+                    val updatedPost = post.copy(comments = comments)
+                    posts[index] = updatedPost
                 }
-                posts[index] = updatedPost
-            })
+            )
         }
     }
 }
 
 @Composable
-fun PostItem(post: Post, onLikeClick: () -> Unit) {
+fun PostItem(
+    post: Post,
+    onLikeClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onCommentClick: () -> Unit,
+    onSubmitComment: (text: String) -> Unit
+) {
     Column {
         PostHeader(post)
         PostImage(post)
-        PostActions(post, onLikeClick)
+        PostActions(post, onLikeClick, onShareClick, onCommentClick)
         PostReactions(post)
         PostDescription(post)
         PostDate(post)
+        PostComments(post, onSubmitComment)
+    }
+}
+
+@Composable
+fun PostComments(post: Post, onSubmitComment: (String) -> Unit) {
+    if (post.showComment) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(post.comments.size * 50.dp + 60.dp)
+                .padding(8.dp, 0.dp, 8.dp, 0.dp)
+        ) {
+            CommentList(post.comments)
+            CommentBox(onSubmitComment)
+        }
+    }
+}
+
+@Composable
+fun ColumnScope.CommentList(comments: ArrayList<Comment>) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(8.dp, 0.dp, 8.dp, 0.dp)
+            .fillMaxWidth()
+            .weight(1f)
+    ) {
+        items(comments) {
+            CommentItem(comment = it)
+        }
+    }
+}
+
+@Composable
+fun CommentItem(comment: Comment) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = comment.userName,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(8.dp, 0.dp, 8.dp, 0.dp)
+                .fillMaxWidth()
+        )
+        Text(
+            text = comment.text,
+            fontSize = 12.sp,
+            modifier = Modifier
+                .padding(8.dp, 0.dp, 8.dp, 0.dp)
+                .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun CommentBox(onSubmitComment: (String) -> Unit) {
+    val commentText = rememberSaveable { mutableStateOf("") }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp, 0.dp)
+    ) {
+        TextField(
+            value = commentText.value,
+            onValueChange = { commentText.value = it },
+            placeholder = { Text(text = "Add a comment...") },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Gray,
+                errorContainerColor = Color.Red,
+            ),
+            modifier = Modifier
+                .padding(8.dp, 0.dp)
+                .weight(1f)
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+
+                .background(Color(0xFF0095F6), shape = CircleShape)
+                .size(48.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_up),
+                contentDescription = "Send Icon",
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(8.dp)
+                    .clickable {
+                        if (commentText.value.isNotBlank()) {
+                            onSubmitComment(commentText.value)
+                            commentText.value = ""
+                        }
+                    }
+            )
+        }
+
     }
 }
 
@@ -289,7 +440,12 @@ fun PostReactions(post: Post) {
 }
 
 @Composable
-fun PostActions(post: Post, onLikeClick: () -> Unit) {
+fun PostActions(
+    post: Post,
+    onLikeClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onCommentClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -312,6 +468,9 @@ fun PostActions(post: Post, onLikeClick: () -> Unit) {
             modifier = Modifier
                 .padding(6.dp)
                 .size(30.dp)
+                .clickable {
+                    onCommentClick()
+                }
         )
         Icon(
             painter = painterResource(id = R.drawable.ic_share),
@@ -319,6 +478,9 @@ fun PostActions(post: Post, onLikeClick: () -> Unit) {
             modifier = Modifier
                 .padding(8.dp, 10.dp, 8.dp, 8.dp)
                 .size(22.dp)
+                .clickable {
+                    onShareClick()
+                }
         )
         Spacer(modifier = Modifier.weight(1f))
         Icon(
@@ -380,6 +542,7 @@ fun PostHeader(post: Post) {
 
 @Composable
 fun StoryPanel() {
+    val context = LocalContext.current
     val stories = arrayListOf(
         Story(R.drawable.profile, "user1"),
         Story(R.drawable.profile, "user2"),
@@ -390,16 +553,24 @@ fun StoryPanel() {
     )
     LazyRow {
         item {
-            YourStoryItem()
+            YourStoryItem(onClickNewStory = {
+                Toast.makeText(context, "Nueva historia clickeada", Toast.LENGTH_SHORT).show()
+            })
         }
         items(stories) {
-            StoryItem(story = it)
+            StoryItem(story = it, onStoryClick = {
+                Toast.makeText(
+                    context,
+                    "Story clickeada para el usuario: ${it.userName}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
         }
     }
 }
 
 @Composable
-fun YourStoryItem() {
+fun YourStoryItem(onClickNewStory: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -416,6 +587,9 @@ fun YourStoryItem() {
                     .padding(3.dp, 5.dp, 0.dp, 0.dp)
                     .size(55.dp)
                     .clip(CircleShape)
+                    .clickable {
+                        onClickNewStory()
+                    }
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_plus_blue),
@@ -423,6 +597,9 @@ fun YourStoryItem() {
                 modifier = Modifier
                     .size(15.dp)
                     .align(Alignment.BottomEnd)
+                    .clickable {
+                        onClickNewStory()
+                    }
             )
         }
 
@@ -438,7 +615,7 @@ fun YourStoryItem() {
 }
 
 @Composable
-fun StoryItem(story: Story) {
+fun StoryItem(story: Story, onStoryClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -459,6 +636,9 @@ fun StoryItem(story: Story) {
                     .padding(3.dp, 3.dp, 0.dp, 0.dp)
                     .size(55.dp)
                     .clip(CircleShape)
+                    .clickable {
+                        onStoryClick()
+                    }
             )
         }
         Text(
@@ -525,8 +705,11 @@ fun PostItemPreview() {
                     "user3",
                     "2023-06-01",
                     "Esta es una descripción de la publicación 1"
-
-                ), onLikeClick = {}
+                ),
+                onLikeClick = {},
+                onShareClick = {},
+                onCommentClick = {},
+                onSubmitComment = {}
             )
         }
     }
@@ -541,7 +724,7 @@ fun StoryItemPreview() {
                 .padding(8.dp)
                 .width(80.dp)
         ) {
-            StoryItem(story = Story(R.drawable.profile, "user1"))
+            StoryItem(story = Story(R.drawable.profile, "user1"), onStoryClick = {})
         }
     }
 }

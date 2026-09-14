@@ -7,5 +7,12 @@ data class Post(
     val reactionName: String,
     val date: String,
     val description: String,
-    val isLiked: Boolean = false
+    val isLiked: Boolean = false,
+    val showComment: Boolean = false,
+    val comments: ArrayList<Comment> = arrayListOf() //lista de comentarios
+)
+
+data class Comment(
+    val userName: String,
+    val text: String,
 )

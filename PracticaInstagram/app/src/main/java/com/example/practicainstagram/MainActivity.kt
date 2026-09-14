@@ -181,16 +181,17 @@ fun ColumnScope.PostList() {
     LazyColumn(
         modifier = Modifier.weight(1f)
     ) {
-        items(posts) {
-            PostItem(it, onLikeClick = {
-                val index = posts.indexOf(it)
-                it.isLiked = !it.isLiked
-                if (it.isLiked) {
+        items(posts) { post ->
+            PostItem(post, onLikeClick = {
+                val index = posts.indexOf(post)
+                val updatedPost = post.copy(isLiked = !post.isLiked)
+                
+                if (updatedPost.isLiked) {
                     Toast.makeText(context, "Post likeado", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "Post deslikeado", Toast.LENGTH_SHORT).show()
                 }
-                posts[index] = it
+                posts[index] = updatedPost
             })
         }
     }

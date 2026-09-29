@@ -1,0 +1,19 @@
+package com.example.practicainstagram
+
+data class Post(
+    val id: Int, //id del post
+    val profileId: Int, //id de la foto de perfil
+    val userName: String,
+    val imageUrl: String, //url de la imagen
+    val reactionName: String,
+    val date: String,
+    val description: String,
+    val isLiked: Boolean = false,
+    val showComment: Boolean = false,
+    val comments: ArrayList<Comment> = arrayListOf() //lista de comentarios
+)
+
+data class Comment(
+    val userName: String,
+    val text: String,
+)

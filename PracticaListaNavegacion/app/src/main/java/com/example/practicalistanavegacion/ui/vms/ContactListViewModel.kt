@@ -68,6 +68,10 @@ class ContactListViewModel : ViewModel() {
         }
         loadContacts()
     }
+    fun deleteContact(contact: Contact) {
+        ContactRepository.deleteContact(contact)
+        loadContacts()
+    }
 }
 
 data class ContactUiState(

@@ -36,4 +36,8 @@ object ContactRepository {
         }
     }
 
+    fun deleteContact(contact: Contact) {
+        contacts.removeIf { it.id == contact.id }
+    }
+
 }

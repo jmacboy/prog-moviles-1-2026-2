@@ -18,12 +18,18 @@ class ContactListViewModel(
 
     fun loadContacts() {
         viewModelScope.launch {
-            val contacts = contactRepository.getContacts()
+            var contacts: ArrayList<Contact>
+            if (_uiState.value.searchText.isNotBlank()) {
+                contacts = contactRepository.searchContacts(_uiState.value.searchText)
+            } else {
+                contacts = contactRepository.getContacts()
+            }
             _uiState.update {
                 it.copy(contactList = ArrayList(contacts))
             }
         }
     }
+
 
     fun selectContact(selectedContact: Contact) {
         _uiState.update {
@@ -97,6 +103,13 @@ class ContactListViewModel(
         }
     }
 
+    fun setSearchText(text: String) {
+        _uiState.update {
+            it.copy(searchText = text)
+        }
+        loadContacts()
+    }
+
 //    fun insertContact(name: String, phoneNumber: String) {
 //        viewModelScope.launch {
 //            contactRepository.addContact(name, phoneNumber, "", "")
@@ -113,5 +126,6 @@ data class ContactUiState(
         phoneNumber = "",
         email = "",
         address = ""
-    )
+    ),
+    val searchText: String = ""
 )

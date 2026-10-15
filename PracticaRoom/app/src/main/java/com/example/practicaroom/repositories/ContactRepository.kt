@@ -13,6 +13,12 @@ class ContactRepository(
             .getAll() as ArrayList<Contact>
     }
 
+    suspend fun searchContacts(query: String): ArrayList<Contact> {
+        return AppDatabase.getDatabase(context)
+            .contactDao()
+            .searchByName("%$query%") as ArrayList<Contact>
+    }
+
     suspend fun addContact(name: String, phoneNumber: String, email: String, address: String) {
         AppDatabase.getDatabase(context)
             .contactDao()

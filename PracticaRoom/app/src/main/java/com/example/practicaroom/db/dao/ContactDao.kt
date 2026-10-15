@@ -15,6 +15,9 @@ interface ContactDao {
     @Query("SELECT * FROM contact WHERE id = :id")
     suspend fun getById(id: Int): Contact?
 
+    @Query("SELECT * FROM contact WHERE name LIKE :name")
+    suspend fun searchByName(name: String): List<Contact>
+
     @Insert
     suspend fun insert(contact: Contact): Long //devuelve el id del contacto insertado
 

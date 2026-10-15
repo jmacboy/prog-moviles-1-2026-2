@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,7 +61,19 @@ fun ContactList(
     LaunchedEffect(Unit) {
         vm.loadContacts()
     }
+
     LazyColumn(modifier = modifier.fillMaxSize()) {
+        item() {
+            OutlinedTextField(
+                value = uiState.value.searchText,
+                onValueChange = { vm.setSearchText(it) },
+                label = { Text("Buscar contacto") },
+                leadingIcon = { Text("🔍") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+        }
         items(uiState.value.contactList) { contact ->
             ContactItem(
                 contact = contact,

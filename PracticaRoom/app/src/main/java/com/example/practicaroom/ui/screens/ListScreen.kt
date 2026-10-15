@@ -36,8 +36,8 @@ fun ListScreen(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 vm.resetSelectedContact()
-                vm.insertContact("Juan Perez","123456789")
-//                navController.navigate("second")
+//                vm.insertContact("Juan Perez","123456789")
+                navController.navigate("second")
             }) {
                 Text("+")
             }

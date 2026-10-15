@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.practicaroom.repositories.ContactRepository
+import com.example.practicaroom.ui.screens.FormScreen
 import com.example.practicaroom.ui.screens.ListScreen
 import com.example.practicaroom.ui.theme.PracticaRoomTheme
 import com.example.practicaroom.ui.vms.ContactListViewModel
@@ -40,6 +41,9 @@ private fun NavigationApp(
     ) {
         composable("home") {
             ListScreen(navController = navController, vm = viewModel)
+        }
+        composable("second") {
+            FormScreen(navController = navController, vm = viewModel)
         }
     }
 }

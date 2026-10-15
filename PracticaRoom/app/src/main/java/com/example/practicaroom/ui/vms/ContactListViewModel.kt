@@ -91,16 +91,18 @@ class ContactListViewModel(
     }
 
     fun deleteContact(contact: Contact) {
-        contactRepository.deleteContact(contact)
-        loadContacts()
-    }
-
-    fun insertContact(name: String, phoneNumber: String) {
         viewModelScope.launch {
-            contactRepository.addContact(name, phoneNumber, "", "")
+            contactRepository.deleteContact(contact)
             loadContacts()
         }
     }
+
+//    fun insertContact(name: String, phoneNumber: String) {
+//        viewModelScope.launch {
+//            contactRepository.addContact(name, phoneNumber, "", "")
+//            loadContacts()
+//        }
+//    }
 }
 
 data class ContactUiState(

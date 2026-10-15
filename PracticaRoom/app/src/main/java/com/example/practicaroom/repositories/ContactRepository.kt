@@ -19,12 +19,16 @@ class ContactRepository(
             .insert(Contact(0, name, phoneNumber, email, address))
     }
 
-    fun updateContact(contact: Contact) {
-        //TODO: Cambiar para que se actualice en la base de datos
+    suspend fun updateContact(contact: Contact) {
+        AppDatabase.getDatabase(context)
+            .contactDao()
+            .update(contact)
     }
 
-    fun deleteContact(contact: Contact) {
-        //TODO: Cambiar para que se elimine de la base de datos
+    suspend fun deleteContact(contact: Contact) {
+        AppDatabase.getDatabase(context)
+            .contactDao()
+            .delete(contact)
     }
 
 }

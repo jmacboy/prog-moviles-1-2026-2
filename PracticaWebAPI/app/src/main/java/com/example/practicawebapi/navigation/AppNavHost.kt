@@ -1,18 +1,20 @@
 package com.example.practicawebapi.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.practicawebapi.ui.screens.DetailScreen
 import com.example.practicawebapi.ui.screens.MainScreen
 
 sealed class AppScreen(val route: String) {
     data object Empty : AppScreen("empty")
+    data object Detail : AppScreen("detail/{postId}") {
+        fun createRoute(postId: Int) = "detail/$postId"
+    }
 }
 
 @Composable
@@ -24,7 +26,25 @@ fun AppNavHost(
         startDestination = AppScreen.Empty.route
     ) {
         composable(AppScreen.Empty.route) {
-            MainScreen()
+            MainScreen(
+                onPostClick = { postId ->
+                    navController.navigate(AppScreen.Detail.createRoute(postId))
+                }
+            )
+        }
+        composable(
+            route = AppScreen.Detail.route,
+            arguments = listOf(
+                navArgument("postId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getInt("postId") ?: 0
+            DetailScreen(
+                postId = postId,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }

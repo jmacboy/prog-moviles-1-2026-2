@@ -10,4 +10,9 @@ class PostRepository {
             .create<JsonPlaceholderAPI>()
         return service.getPosts()
     }
+    suspend fun getPostById(id: Int): Post {
+        val service = RetrofitRepository.getInstance()
+            .create<JsonPlaceholderAPI>()
+        return service.getPostById(id)
+    }
 }

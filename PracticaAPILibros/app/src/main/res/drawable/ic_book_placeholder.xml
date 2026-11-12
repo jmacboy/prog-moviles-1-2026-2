@@ -1,0 +1,44 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="120dp"
+    android:viewportWidth="24"
+    android:viewportHeight="36">
+    <!-- Cover -->
+    <path
+        android:fillColor="#FF3F51B5"
+        android:pathData="M0,0h24v36h-24z" />
+    <!-- Spine -->
+    <path
+        android:fillColor="#FF283593"
+        android:pathData="M0,0h2.5v36h-2.5z" />
+    <path
+        android:fillColor="#FF5C6BC0"
+        android:pathData="M2.5,0h0.5v36h-0.5z" />
+    <!-- Decorative frame -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFC107"
+        android:strokeWidth="0.4"
+        android:pathData="M4.5,2h17.5v32h-17.5z" />
+    <!-- Title -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M6.25,8h14v1.6h-14z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M8.25,10.8h10v1.6h-10z" />
+    <!-- Ornament -->
+    <path
+        android:fillColor="#FFFFC107"
+        android:pathData="M13.25,15.5l1.5,1.5l-1.5,1.5l-1.5,-1.5z" />
+    <path
+        android:fillColor="#FFFFC107"
+        android:pathData="M7.5,16.8h3.5v0.4h-3.5z" />
+    <path
+        android:fillColor="#FFFFC107"
+        android:pathData="M15.5,16.8h3.5v0.4h-3.5z" />
+    <!-- Author -->
+    <path
+        android:fillColor="#FFC5CAE9"
+        android:pathData="M9.25,29h8v1h-8z" />
+</vector>

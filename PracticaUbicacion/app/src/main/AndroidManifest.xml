@@ -14,7 +14,7 @@
         android:theme="@style/Theme.PracticaUbicacion">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBenT-TU5HiK5ERWQaRUEMkMd-2EoY8mPs" />
+            android:value="TU_API_KEY_AQUI" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
